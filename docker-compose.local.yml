@@ -1,0 +1,6 @@
+# Solo para pruebas locales: publica el puerto 8080 en tu equipo.
+# Uso: docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+services:
+  api:
+    ports:
+      - "8080:8080"

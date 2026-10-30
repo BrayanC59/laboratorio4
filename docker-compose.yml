@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tareas
+      POSTGRES_USER: tareas
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tareas123}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tareas -d tareas"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: tareas
+      DB_USER: tareas
+      DB_PASSWORD: ${DB_PASSWORD:-tareas123}
+    expose:
+      - "8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
